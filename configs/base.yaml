@@ -1,0 +1,83 @@
+# Evaluation runs
+root_path: '/home/bsj/PIPE' #customize this path
+num_data_per_world: 1
+
+test_world_only: false
+train_test_world_split_path: 'data_factory/train_test_worlds_split_1127.json'
+
+# Available map IDs based on folder names in kth_test_maps:
+# - 50052749 (2749)
+# - 50052750 (2750)
+# - 50010535_PLAN1 (PLAN1)
+# - 50010535_PLAN2 (PLAN2)
+# - 50010536_PLAN3 (PLAN3)
+# - 50052751 (2751)
+# - 50052752 (2752)
+# - 50052753 (2753)
+# - 50052754 (2754)
+# - 50015847 (5847)
+# - 50015848 (5848)
+# - 50037764_PLAN1 (7764_PLAN1)
+# - 50037765_PLAN3 (7765_PLAN3)
+# - 50052748 (2748)
+collect_world_list: ['50015848']
+output_folder_name: 'experiments'
+
+start_pose: [900, 1174]
+cur_pose_dist_threshold_m: 1
+
+#modes_to_test: ['nearest', 'nbv-2d', 'onlyvar', 'visunk', 'visvar', 'mapex', 'upen', 'hectoraug'] #all methods
+#modes_to_test: ['nearest', 'upen', 'hectoraug', 'mapex'] #MapEx vs baselines
+#modes_to_test: ['nbv-2d', 'onlyvar', 'visunk', 'visvar', 'mapex'] #ablations
+#modes_to_test: ['mapex'] #MapEx
+#modes_to_test: ['nbv-2d'] #MapEx  
+#modes_to_test: ['pw-nbv-2d']
+modes_to_test: ['pipe']
+
+unknown_as_occ: true
+use_distance_transform_for_planning: true
+log_iou: false
+
+
+upen_config:
+  rrt_max_iters: 2500
+  expand_dis: 5
+  goal_sample_rate: -1 # ensure that goal sampling rate is below 0 for exploration
+  connect_circle_dist: 20
+  rrt_num_path: 1000
+  rrt_straight_line: false
+  reach_horizon: 50
+  goal_pose_freq: 10
+
+lidar_sim_configs:
+  laser_range_m: 20
+  num_laser: 2500
+  pixel_per_meter: 10
+  dilate_diam_for_planning: 3
+
+
+pred_vis_configs:
+  laser_range_m: 20
+  pixel_per_meter: 10
+  num_laser: 250
+  pathwise_index: 3
+
+mission_time: 1000
+
+show_plt_freq: 50
+
+max_workers: 1
+
+ensemble_folder_name: 'weights/lama_ensemble'
+
+# Number of spatial classes in the output
+n_spatial_classes: 3
+
+# Scale factor for the map loss
+map_loss_scale: 1.0
+
+# LAMA Model Configs
+big_lama_model_folder_name: 'weights/big_lama'
+lama_transform_variant: 'default_map_eval'
+lama_device: 'cuda:0'
+lama_out_size: (512, 512)

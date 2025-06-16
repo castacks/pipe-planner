@@ -1,0 +1,45 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Logs / outputs
+*.log
+*.out
+*.tmp
+*.bak
+nohup.out
+*.swp
+
+# Virtual environments
+.venv/
+env/
+venv/
+*.env
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.code-workspace
+
+# Data / Results / Experiments
+experiments/
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.npz
+*.h5
+
+# ROS build and log dirs (if applicable)
+build/
+devel/
+log/
+install/
+
+# OS generated files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --output=printouts/b_explore_%A_%a.out
+#SBATCH --error=printouts/b_explore_%A_%a.err
+#SBATCH -p a100-gpu-shared
+#SBATCH --gres=gpu:1
+#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --ntasks-per-node 1                   # Number of cores (adjust as needed)
+#SBATCH --job-name=b_explore
+#SBATCH --array=55-61  # Use the num_jobs variable here
+
+RUN_COMMANDS="/data1/datasets/cherieh/map-explore/map_prediction_toolbox/data_factory/perceptron_scripts/run_explore.job"
+
+# Execute the combined commands in parallel
+echo "Starting task number (in sbatch file) $SLURM_ARRAY_TASK_ID"
+bash -c "$RUN_COMMANDS"

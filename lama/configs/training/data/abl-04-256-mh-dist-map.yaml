@@ -1,0 +1,101 @@
+# @package _group_
+
+batch_size: 10
+val_batch_size: 2
+num_workers: 3
+
+train:
+  indir: ${location.data_root_dir}/${location.train_subdir}
+  out_size: 256
+  kind: actual_mask
+  transform_variant: default_map
+  num_frames_to_skip: 25
+  dataloader_kwargs:
+    batch_size: ${data.batch_size}
+    shuffle: True
+    num_workers: ${data.num_workers}
+
+
+val:
+  indir: ${location.data_root_dir}/test
+  kind: actual_mask
+  transform_variant: default_map
+  num_frames_to_skip: 100
+  dataloader_kwargs:
+    batch_size: ${data.val_batch_size}
+    shuffle: False
+    num_workers: ${data.num_workers}
+
+
+#extra_val:
+#  random_thin_256:
+#    indir: ${location.data_root_dir}/extra_val/random_thin_256
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  random_medium_256:
+#    indir: ${location.data_root_dir}/extra_val/random_medium_256
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  random_thick_256:
+#    indir: ${location.data_root_dir}/extra_val/random_thick_256
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  random_thin_512:
+#    indir: ${location.data_root_dir}/extra_val/random_thin_512
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  random_medium_512:
+#    indir: ${location.data_root_dir}/extra_val/random_medium_512
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  random_thick_512:
+#    indir: ${location.data_root_dir}/extra_val/random_thick_512
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  segm_256:
+#    indir: ${location.data_root_dir}/extra_val/segm_256
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+#  segm_512:
+#    indir: ${location.data_root_dir}/extra_val/segm_512
+#    img_suffix: .png
+#    dataloader_kwargs:
+#      batch_size: ${data.val_batch_size}
+#      shuffle: False
+#      num_workers: ${data.num_workers}
+
+visual_test:
+  indir: ${location.data_root_dir}/test
+  # img_suffix: .png
+  # pad_out_to_modulo: 32
+  # dataloader_kwargs:
+  #   batch_size: 1
+  #   shuffle: False
+  #   num_workers: ${data.num_workers}
+  kind: actual_mask
+  transform_variant: default_map
+  dataloader_kwargs:
+    batch_size: 1
+    shuffle: False
+    num_workers: ${data.num_workers}
