@@ -1,5 +1,3 @@
-# PIPE Planner
-
 <p align="center">
 <h1 align="center">PIPE Planner: Pathwise Information Gain with Map Predictions for Indoor Robot Exploration</h1>
 <h3 class="is-size-5 has-text-weight-bold" style="color: orange;" align="center">
