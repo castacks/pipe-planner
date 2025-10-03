@@ -4,7 +4,7 @@
     IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2025
 </h3>
   <p align="center">
-    <a href="https://bsj970.github.io/" target="_blank"><strong>Seungjae Baek*</strong></a>
+    <a href="https://seungjaebk.github.io/" target="_blank"><strong>Seungjae Baek*</strong></a>
     ·
     <a href="https://bradymoon.com/" target="_blank"><strong>Brady Moon*</strong></a>
     ·
