@@ -1,6 +1,6 @@
 <p align="center">
-<h1 align="center">PIPE Planner: Pathwise Information Gain with Map Predictions for Indoor Robot Exploration</h1>
-<h3 class="is-size-5 has-text-weight-bold" style="color: orange;" align="center">
+<h1 align="center">PIPE Planner: Pathwise Information Gain with <br> Map Predictions for Indoor Robot Exploration</h1>
+<h3 class="is-size-4 has-text-weight-bold" style="color: orange;" align="center">
     IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2025
 </h3>
   <p align="center">
