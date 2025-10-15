@@ -272,7 +272,6 @@ def run_exploration_for_map(occ_map, exp_title, models_list,lama_alltrain_model,
             ax_flatten = ax.flatten()
             ax_gt = ax_flatten[0]
             ax_obs = ax_flatten[1]
-            #ax_pred = ax_flatten[2]
             ax_pred_var = ax_flatten[2]
             ax_mean_map = ax_flatten[3]
             pred_maputils = None
@@ -337,7 +336,7 @@ def run_exploration_for_map(occ_map, exp_title, models_list,lama_alltrain_model,
             output_subdirectory_name = f"{timestamp}_test"
 
             # Use this for your log directory
-            log_dir = os.path.join('/home/bsj/MapEx/experiments', output_subdirectory_name)
+            log_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'experiments', output_subdirectory_name)
             os.makedirs(log_dir, exist_ok=True)
             iou_log_file = os.path.join(log_dir, f"{exp_title}.txt")
 
@@ -675,14 +674,10 @@ def run_exploration_for_map(occ_map, exp_title, models_list,lama_alltrain_model,
 
                     if pose_list is not None:
                         ax_obs.plot(pose_list[:, 1]-pd_size, pose_list[:, 0]-pd_size, c='#eb4205', alpha=1.0)
-                        #ax_obs.scatter(pose_list[-1, 1]-pd_size, pose_list[-1, 0]-pd_size, c='g', s=10, marker='*')
                     if mode not in ['upen', 'hector', 'hectoraug']: # UPEN and Hector do not have locked frontiers
                         ax_obs.scatter(locked_frontier_center[1]-pd_size, locked_frontier_center[0]-pd_size, c='#eb4205', s=10)
-                    #ax_obs.scatter(cur_pose[1]-pd_size, cur_pose[0]-pd_size, c='r', s=5, marker='x')
-                    #ax_obs.scatter(next_pose[1]-pd_size, next_pose[0]-pd_size, c='g', s=5, marker='x')
                     if mode not in ['hector', 'hectoraug']: # Hector does not have path planning
                         ax_obs.plot(plan_y-pd_size, plan_x-pd_size,c='#eb4205', linestyle=':')
-                        #ax_obs.scatter(plan_y-pd_size, plan_x-pd_size, c='#FF9F1C', s=1, marker='x')
 
                     if mode not in ['upen', 'hector', 'hectoraug']: # UPEN and Hector are not a frontier planner
                         if viz_medium_flooded_grid is not None:
@@ -701,68 +696,15 @@ def run_exploration_for_map(occ_map, exp_title, models_list,lama_alltrain_model,
                                 ax_obs.imshow(flooded_ind_colors_alpha[pd_size+pad_h1:-(pd_size+pad_h2),pd_size+pad_w1:-(pd_size+pad_w2)])
 
                     ax_obs.set_title('Observed Map')
-                    # print("3b. Visualizing Observed Map took {} seconds".format(np.round(time.time() - start_time, 2)))
 
-                    # # Display the frontier regions
-                    #ax_frontier.imshow(filtered_map[pd_size:-pd_size,pd_size:-pd_size], cmap='gray')
-                    #ax_frontier.scatter(np.array(frontier_region_centers)[:, 1]-pd_size, np.array(frontier_region_centers)[:, 0]-pd_size, c=-total_cost, s=10, marker='x',cmap='plasma')
-                    #ax_frontier.scatter(cur_pose[1]-pd_size, cur_pose[0]-pd_size, c='b', s=10)
-                    #ax_frontier.scatter(locked_frontier_center[1]-pd_size, locked_frontier_center[0]-pd_size, c='yellow', s=10, marker='o')
-                    #ax_frontier.set_title('Frontier Regions \n(yellow is nearest), # regions: {}'.format(num_large_regions))
-                    # print("3c. Visualizing Frontier Regions took {} seconds".format(np.round(time.time() - start_time, 2)))
-
-                    # # Display the predictions
                     if pred_maputils is not None:
                         white = "#FFFFFF"
                         blue = "#0000FF"
                         colors = [white, blue]
                         n_bins = 10
                         cmap = LinearSegmentedColormap.from_list("customwhiteblue", colors, N=n_bins)
-                        # #ax_pred.imshow(lama_pred_alltrain_viz[pd_size+pad_w1:-(pd_size+pad_w2),pd_size+pad_h1:-(pd_size+pad_h2),0]/255.0,cmap=cmap)
-                        # ax_pred.imshow(pred_maputils[pd_size+pad_h1:-(pd_size+pad_h2),pd_size+pad_w1:-(pd_size+pad_w2)],cmap=cmap)
-
-                        # # Add locked frontier and planned path to predicted map
-                        # if mode not in ['upen', 'hector', 'hectoraug']: # UPEN and Hector do not have locked frontiers
-                        #     ax_pred.scatter(locked_frontier_center[1]-pd_size, locked_frontier_center[0]-pd_size, c='#eb4205', s=10)
-                        # if mode not in ['hector', 'hectoraug']: # Hector does not have path planning
-                        #     ax_pred.plot(plan_y-pd_size, plan_x-pd_size, c='#eb4205', linestyle=':')
-
-                        # #overlay observed(known) occupied cells on top of the predicted map
-                        # obs_occ_mask = np.zeros_like(pred_maputils[pd_size+pad_h1:-(pd_size+pad_h2),pd_size+pad_w1:-(pd_size+pad_w2)])
-                        # occupied_indices_in_obsmap = np.where(mapper.obs_map[pd_size:-(pd_size),pd_size:-(pd_size)] == 1.0) #indices where obs_map is occupied
-                        # obs_occ_mask[occupied_indices_in_obsmap] = 1
-                        # obs_occ_mask_colors = ["#000000","#000000"]
-                        # obs_occ_mask_cmap = LinearSegmentedColormap.from_list("mask_black",obs_occ_mask_colors,N=2)
-                        # obs_occ_mask_alpha = np.zeros_like(obs_occ_mask, dtype=float)
-                        # obs_occ_mask_alpha[obs_occ_mask==1] = 1.0
-                        # obs_occ_mask_alpha[obs_occ_mask==0] = 0.0
-                        # ax_pred.imshow(obs_occ_mask, cmap=obs_occ_mask_cmap, alpha=obs_occ_mask_alpha) #obs_map known occ cells -> black
-
-                        # #overlay unknown(obs_map) cells as gray tint
-                        # obs_unk_mask = np.zeros_like(pred_maputils[pd_size+pad_h1:-(pd_size+pad_h2),pd_size+pad_w1:-(pd_size+pad_w2)])
-                        # unknown_indices_in_obs_map = np.where(mapper.obs_map[pd_size:-(pd_size),pd_size:-(pd_size)] == 0.5) #indices of unknown cells in obs_map
-                        # obs_unk_mask[unknown_indices_in_obs_map] = 1
-                        # grey = "#909090" #tunable grey value #606060 might be better for pred_maputils?
-                        # obs_unk_mask_colors = [grey,grey]
-                        # obs_unk_mask_cmap = LinearSegmentedColormap.from_list("mask_grey", obs_unk_mask_colors, N=2)
-                        # obs_unk_mask_alpha = np.zeros_like(obs_unk_mask, dtype=float)
-                        # obs_unk_mask_alpha[obs_unk_mask==1] = 0.3 #tunable opacity for grey unknown area
-                        # obs_unk_mask_alpha[obs_unk_mask==0] = 0.0
-                        # ax_pred.imshow(obs_unk_mask, cmap=obs_unk_mask_cmap, alpha=obs_unk_mask_alpha)
-
-                        # path_color = "#eb4205"  # Changed to coral red to match Mean Map
-                        # if mode == 'mapex':
-                        #     path_color = "#eb4205" #coral(red)
-                        # if mode == 'upen':
-                        #     path_color = "#eb4205"
-                        # if mode == 'hectoraug':
-                        #     path_color = "#f2ac0a"
-                        # if pose_list is not None:
-                        #     ax_pred.plot(pose_list[:, 1]-(pd_size), pose_list[:, 0]-(pd_size), c=path_color, alpha=1.0)
-                        # ax_pred.set_title('Predicted Map')
                         
                         if mode not in ['hectoraug']: # Hector aug does not have variance
-                            #green = "#057523"
                             orange = "#FF9F1C"
                             colors = [white, orange]
                             n_bins = 10
@@ -944,7 +886,12 @@ if __name__ == '__main__':
     parser.add_argument('--start_pose', nargs='+', help='List of start pose')
     args = parser.parse_args()
     
+    # Auto-detect root path (PIPE directory is parent of scripts directory)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_path = os.path.dirname(script_dir)
+    
     collect_opts = get_options_dict_from_yml(data_collect_config_name)
+    collect_opts.root_path = root_path  # Set root_path dynamically
     if args.collect_world_list is not None:
         collect_opts.collect_world_list = args.collect_world_list
     if args.start_pose is not None: 
@@ -953,7 +900,7 @@ if __name__ == '__main__':
             start_pose.append(int(pose_elem))
         collect_opts.start_pose = start_pose
 
-    kth_map_folder_path = os.path.join(collect_opts.root_path, 'kth_test_maps')
+    kth_map_folder_path = os.path.join(root_path, 'kth_test_maps')
     kth_map_paths = os.listdir(kth_map_folder_path)
 
     if collect_opts.collect_world_list is not None:
@@ -963,11 +910,10 @@ if __name__ == '__main__':
                 kth_map_paths_collect.append(folder_name)
         kth_map_paths = kth_map_paths_collect
 
-    assert not (collect_opts.test_world_only and collect_opts.collect_world_list is not None), "Only one of test_world_only and collect_world_list can be true"
     kth_map_folder_paths = [os.path.join(kth_map_folder_path, p) for p in kth_map_paths] * collect_opts.num_data_per_world
 
     # Make output_subdirectory_name if it doesn't exist 
-    output_root_dir = os.path.join(collect_opts.root_path, collect_opts.output_folder_name, output_subdirectory_name)
+    output_root_dir = os.path.join(root_path, collect_opts.output_folder_name, output_subdirectory_name)
     if not os.path.exists(output_root_dir):
         os.makedirs(output_root_dir)
     
@@ -977,15 +923,17 @@ if __name__ == '__main__':
     #ensemble of lama models (G_i; G_1, G_2, G_3 in the paper) - fine-tuned with split, smaller training sets
     if collect_opts.ensemble_folder_name is not None:
         ensemble_folder_name = collect_opts.ensemble_folder_name
-        ensemble_model_dirs = sorted(os.listdir(os.path.join(collect_opts.root_path, 'pretrained_models', ensemble_folder_name)))
+        ensemble_folder_path = os.path.join(root_path, 'pretrained_models', ensemble_folder_name)
+        ensemble_model_dirs = sorted(os.listdir(ensemble_folder_path))
         for ensemble_model_dir in ensemble_model_dirs:
-            ensemble_model_path = os.path.join(collect_opts.root_path, 'pretrained_models', ensemble_folder_name, ensemble_model_dir)
+            ensemble_model_path = os.path.join(ensemble_folder_path, ensemble_model_dir)
             model = load_lama_model(ensemble_model_path, device=collect_opts.lama_device)
             print("Loaded model: ", ensemble_model_dir)
             model_list.append(model)
     
     #setup a big lama model (G in the paper) - fine-tuned with the entire training set
-    lama_model = load_lama_model(os.path.join(collect_opts.root_path, 'pretrained_models', collect_opts.big_lama_model_folder_name), device=collect_opts.lama_device)
+    big_lama_path = os.path.join(root_path, 'pretrained_models', collect_opts.big_lama_model_folder_name)
+    lama_model = load_lama_model(big_lama_path, device=collect_opts.lama_device)
     lama_map_transform = get_lama_transform(collect_opts.lama_transform_variant, collect_opts.lama_out_size)
 
     run_exploration_args = []

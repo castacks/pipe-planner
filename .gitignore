@@ -25,6 +25,21 @@ venv/
 .idea/
 *.code-workspace
 
+# User/home environment (prevent accidental commits)
+.cache/
+.config/
+.conda/
+.nv/
+.local/
+.mozilla/
+.cargo/
+.npm/
+.python_history
+.bashrc
+.bash_logout
+.profile
+.ssh/
+
 # Data / Results / Experiments
 experiments/
 outputs/

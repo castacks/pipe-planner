@@ -29,23 +29,17 @@ def psuedo_traj_controller(plan_x, plan_y, plan_ind_to_use):
     return next_pose
 
 def get_kth_occ_validspace_map(occ_npy_path, validspace_npy_path):
-    # TODO: parametrize block_size
     block_size_pix = 2
-    # TODO: flesh out this
     # Load npy path which has value either 0: occupied and 254: free 
     # and Convert to occupancy map (0: unknown, 1: occupied, 2: free)
     occ_npy = np.load(occ_npy_path)
     assert np.array_equal(np.unique(occ_npy), [0, 254]), "unique values in occ_npy should be 0 and 254"
     occ_map = np.zeros_like(occ_npy)
-    # TODO: parametrize 1 and 2
     occ_map[occ_npy == 0] = 1 # occupied
     occ_map[occ_npy == 254] = 2 # free
-    #print("original occ_map size: ", occ_map.shape[0], occ_map.shape[1])
 
     # Make the image block_size_pix X smaller for faster planning, when interpolating choose the cell with lower number (occupied)
-    
     occ_map = block_reduce(occ_map, block_size=(block_size_pix, block_size_pix), func=np.min, cval=1)
-    # TODO: check if cval=1 is reasonable
     assert np.min(occ_map) == 1, "kth_occ_map should be 1 (occupied) or 2 (free). There is unknown..."
     # Convert occ_map to what is needed for mask_utils
     # before: (0: unknown, 1: occupied, 2: free)
@@ -73,10 +67,8 @@ def init_worker():
 
 class FrontierPlanner():
     def __init__(self, score_mode=None):
-        # TODO: parametrize with hydra 
         self.region_size_threshold = 10 # Filters out frontier regions that are smaller than this
         self.score_mode = score_mode
-        print(self.score_mode)
         assert score_mode in ['nearest', 'visvar', 'visunk','nbv-2d','onlyvar', 'mapex', 'hector', 'hectoraug', 'pipe', 'pw-nbv-2d'],\
             "score_mode must be one of ['nearest', 'visvar', 'visunk','nbv-2d','onlyvar', 'mapex', 'hector, 'hectoraug', 'pipe', 'pw-nbv-2d']"
     def get_frontier_centers_given_obs_map(self, obs_map):
@@ -222,7 +214,6 @@ class FrontierPlanner():
                             skip_raycast=skip_raycast)
                 
                 if self.score_mode == 'mapex':
-                    print("Using probabilistic raycast")
                     # Calculate the probabilistic raycast using mean predicted occupancy map
                     vis_ind_prob, lidar_mask_prob, inited_flood_grid_prob, actual_hit_points_prob, flooded_grid_prob = \
                     smu.get_vis_mask(mean_map, # mean predicted occupancy map
@@ -302,13 +293,6 @@ class FrontierPlanner():
             for poly in unioned_geom.geoms:
                 holes.extend([list(hole.coords) for hole in poly.interiors if hole])
 
-        # Include holes from trapped regions
-        # for trapped_region in trapped_regions:
-        #     if trapped_region.geom_type == 'Polygon' and not trapped_region.is_empty:
-        #         holes.append(list(trapped_region.exterior.coords))
-        #     elif trapped_region.geom_type == 'MultiPolygon':
-        #         holes.extend([list(p.exterior.coords) for p in trapped_region.geoms if not p.is_empty])
-
         # Instead of forcing a single Polygon with holes, check the geometry type first
         if not unioned_geom.is_empty:
             if unioned_geom.geom_type == 'Polygon':
@@ -322,8 +306,6 @@ class FrontierPlanner():
         elif isinstance(unioned_geom, MultiPolygon):
             print("Unioned geom is a MultiPolygon")
             boundary_arrays = [np.array(poly.exterior.coords).astype(int) for poly in unioned_geom.geoms]
-
-        #print("Number of boundaries: ", len(boundary_arrays))
         for boundary_array in boundary_arrays:
             inited_flood_grid = smu.init_flood_fill(
                 start_point,
@@ -357,7 +339,6 @@ class FrontierPlanner():
         zero_count = np.count_nonzero(flooded_grid == 0)
         if zero_count > minkowski_area:
             flooded_grid.fill(np.nan)
-            print("Pruned invalid frontier")
             return flooded_grid
 
         if np.any(flooded_grid != 0):
@@ -418,71 +399,7 @@ class FrontierPlanner():
         flooded_grid_list   = []
         frontier_vals       = []
 
-        # # Process the results to determine frontier values.
-        # for col, flooded_grid_path in enumerate(flooded_results):
-        #     path_len = len(path_collection[col]) if len(path_collection[col]) > 0 else 1
-        #     if not np.any((flooded_grid_path == 0) | (flooded_grid_path == 0.5) | (flooded_grid_path == 1)):
-        #         frontier_val = -np.inf
-        #     elif self.score_mode in ['pipe']:
-        #         flooded_grid_path_tensor = torch.tensor(flooded_grid_path, dtype=torch.bool)
-        #         frontier_val = torch.sum(var_map[flooded_grid_path_tensor]) / path_len
-        #     elif self.score_mode in ['pw-nbv-2d']:
-        #         frontier_val = np.sum(flooded_grid_path) / path_len
-        #     else:
-        #         print("Invalid exploration method!")
-        #         break
-
-            
-        #     # if frontier_val == 0:
-        #     #     continue
-
-
-
-        #     frontier_cost_list.append(-frontier_val)
-
-        #     if len(path_collection) > 1:
-        #         if frontier_val > second_best_frontier_val:
-        #             second_best_frontier_val = frontier_val
-        #             viz_medium_flooded_grid = flooded_grid_path
-        #             medium_ind = col
-        #             second_locked_frontier_center = frontier_region_centers[medium_ind]
-
-        #             if frontier_val > best_frontier_val:
-        #                 second_best_frontier_val = best_frontier_val
-        #                 viz_medium_flooded_grid = viz_most_flooded_grid
-        #                 medium_ind = best_ind
-        #                 second_locked_frontier_center = locked_frontier_center
-
-        #                 best_frontier_val = frontier_val
-        #                 viz_most_flooded_grid = flooded_grid_path
-        #                 best_ind = col
-        #                 locked_frontier_center = frontier_region_centers[best_ind]
-        #     else:
-        #         best_frontier_val = frontier_val
-        #         viz_most_flooded_grid = flooded_grid_path
-        #         best_ind = col
-        #         locked_frontier_center = frontier_region_centers[best_ind]
-
-        # frontier_cost_list = np.array(frontier_cost_list)
-
-        # # indices of the best and second-best (needed by the caller)
-        # best_ind   = int(np.argmin(frontier_cost_list))
-        # medium_ind = (int(np.argsort(frontier_cost_list)[1])
-        #                 if len(frontier_cost_list) > 1 else -1)
-
-        # locked_frontier_center = frontier_region_centers[best_ind]
-
-        # return (
-        #     frontier_region_centers,
-        #     frontier_cost_list,
-        #     viz_most_flooded_grid,
-        #     viz_medium_flooded_grid,
-        #     best_ind,
-        #     medium_ind,
-        #     locked_frontier_center
-        #     #second_locked_frontier_center
-        #     )
-    
+        # Process the results to determine frontier values
         for path, flooded in zip(path_collection, flooded_results):
             length = max(1, len(path))
             if not np.any((flooded == 0) | (flooded == 0.5) | (flooded == 1)):
@@ -494,11 +411,6 @@ class FrontierPlanner():
                 val  = np.sum(flooded) / length
             else:
                 raise ValueError(f'unknown score_mode {self.score_mode}')
-            
-            # if val == 0:
-            #     print("Current time step is: ", t)
-            #     print("Filtered frontier with value 0")
-            #     continue
 
             frontier_vals.append(val)
             flooded_grid_list.append(flooded)
@@ -559,7 +471,6 @@ class Mapper():
         """
         Get instantaneous observation with LiDAR sim at a given pose.
         No accumulation."""
-        # print('Getting instant obs at pose: ', xy_pose)
         vis_ind, lidar_mask, inited_flood_grid, actual_hit_points, flooded_grid = \
         smu.get_vis_mask(self.gt_map,
                      (xy_pose[0], xy_pose[1]), 
