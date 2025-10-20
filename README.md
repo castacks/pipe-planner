@@ -36,12 +36,7 @@ Create environment with the name 'pipe' from lama's conda_env.yml
     conda env create -n pipe -f lama/conda_env.yml
     conda activate pipe
 
-#### Check "range_libc" Already Installed
-
-    python -c "import range_libc; print('range_libc installed successfully')"
-
-
-#### If Not Installed, Build from Source
+#### Build from Source to install 'range_libc'
 
     cd range_libc/pywrapper
     
