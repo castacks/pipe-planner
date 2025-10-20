@@ -27,8 +27,8 @@
 ### Clone the github repository
 Clone the repository and make sure that you are on the main branch.
 
-    git clone --recurse-submodules git@github.com:castacks/pipe-planner.git
-    cd ~/PIPE
+    git clone --branch init-import --single-branch https://github.com/castacks/pipe-planner.git
+    cd pipe-planner
     git checkout main
     git submodule update --init --recursive
 
