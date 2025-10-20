@@ -25,12 +25,10 @@
 
 ## Preliminary Setup
 ### Clone the github repository
-Clone the repository and make sure that you are on the main branch.
+Clone the repository as below.
 
     git clone --branch init-import --single-branch https://github.com/castacks/pipe-planner.git
     cd pipe-planner
-    git checkout main
-    git submodule update --init --recursive
 
 ### Set up Conda Environment
 Create environment with the name 'pipe' from lama's conda_env.yml
