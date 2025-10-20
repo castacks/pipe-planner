@@ -92,7 +92,7 @@ If true, your algorithm runs until reaching the maximum time step budget (1500 f
 ### Run the script
 Run the 'explore.py' script as below:
 
-    cd scripts/
+    cd ../scripts/
     python3 explore.py
 
 
