@@ -1,6 +1,6 @@
 <p align="center">
-<h1 align="center">PIPE Planner: Pathwise Information Gain with <br> Map Predictions for Indoor Robot Exploration</h1>
-<h3 class="is-size-4 has-text-weight-bold" style="color: orange;" align="center">
+<h1 align="center">PIPE Planner: Pathwise Information Gain with Map Predictions for Indoor Robot Exploration</h1>
+<h3 class="is-size-5 has-text-weight-bold" style="color: orange;" align="center">
     IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS) 2025
 </h3>
   <p align="center">
@@ -25,12 +25,10 @@
 
 ## Preliminary Setup
 ### Clone the github repository
-Clone the repository and make sure that you are on the main branch.
+Clone the repository as below.
 
-    git clone --recurse-submodules git@github.com:castacks/pipe-planner.git
-    cd ~/PIPE
-    git checkout main
-    git submodule update --init --recursive
+    git clone --branch init-import --single-branch https://github.com/castacks/pipe-planner.git
+    cd pipe-planner
 
 ### Set up Conda Environment
 Create environment with the name 'pipe' from lama's conda_env.yml
@@ -38,12 +36,7 @@ Create environment with the name 'pipe' from lama's conda_env.yml
     conda env create -n pipe -f lama/conda_env.yml
     conda activate pipe
 
-#### Check "range_libc" Already Installed
-
-    python -c "import range_libc; print('range_libc installed successfully')"
-
-
-#### If Not Installed, Build from Source
+#### Build from Source to install 'range_libc'
 
     cd range_libc/pywrapper
     
@@ -94,7 +87,7 @@ If true, your algorithm runs until reaching the maximum time step budget (1500 f
 ### Run the script
 Run the 'explore.py' script as below:
 
-    cd scripts/
+    cd ../scripts/
     python3 explore.py
 
 

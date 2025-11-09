@@ -1,0 +1,86 @@
+#!/bin/bash
+
+#echo commands to stdout
+
+set -x
+
+echo "Running task number $SLURM_ARRAY_TASK_ID"
+eval "$(/data1/datasets/cherieh/mambaforge/bin/conda shell.bash hook)"
+source activate lama
+echo "made lama"
+
+# Select arguments based on SLURM_ARRAY_TASK_ID
+case $SLURM_ARRAY_TASK_ID in
+    1) ARGS="--collect_world_list 50052750 --start_pose 515 515";;
+    2) ARGS="--collect_world_list 50052750 --start_pose 513 870";;
+    3) ARGS="--collect_world_list 50052750 --start_pose 800 583";;
+    4) ARGS="--collect_world_list 50052750 --start_pose 802 913";;
+    5) ARGS="--collect_world_list 50010535_PLAN2 --start_pose 515 515";;
+    6) ARGS="--collect_world_list 50010535_PLAN2 --start_pose 768 551";;
+    7) ARGS="--collect_world_list 50010535_PLAN2 --start_pose 515 1517";;
+    8) ARGS="--collect_world_list 50010535_PLAN2 --start_pose 773 1512";;
+    9) ARGS="--collect_world_list 50010535_PLAN1 --start_pose 515 515";;
+    10) ARGS="--collect_world_list 50010535_PLAN1 --start_pose 768 551";;
+    11) ARGS="--collect_world_list 50010535_PLAN1 --start_pose 515 1472";;
+    12) ARGS="--collect_world_list 50010535_PLAN1 --start_pose 773 1512";;
+    13) ARGS="--collect_world_list 50010539 --start_pose 515 515";;
+    14) ARGS="--collect_world_list 50010539 --start_pose 694 620";;
+    15) ARGS="--collect_world_list 50010539 --start_pose 517 1109";;
+    16) ARGS="--collect_world_list 50010539 --start_pose 706 1102";;
+    17) ARGS="--collect_world_list 50010540 --start_pose 515 515";;
+    18) ARGS="--collect_world_list 50010540 --start_pose 647 511";;
+    19) ARGS="--collect_world_list 50010540 --start_pose 524 1007";;
+    20) ARGS="--collect_world_list 50010540 --start_pose 711 1116";;
+    21) ARGS="--collect_world_list 50015847 --start_pose 515 515";;
+    22) ARGS="--collect_world_list 50015847 --start_pose 919 519";;
+    23) ARGS="--collect_world_list 50015847 --start_pose 511 1795";;
+    24) ARGS="--collect_world_list 50015847 --start_pose 928 1678";;
+    25) ARGS="--collect_world_list 50015848 --start_pose 515 515";;
+    26) ARGS="--collect_world_list 50015848 --start_pose 919 519";;
+    27) ARGS="--collect_world_list 50015848 --start_pose 512 1807";;
+    28) ARGS="--collect_world_list 50015848 --start_pose 928 1678";;
+    29) ARGS="--collect_world_list 50025631 --start_pose 517 1027";;
+    30) ARGS="--collect_world_list 50025631 --start_pose 968 1027";;
+    31) ARGS="--collect_world_list 50025631 --start_pose 869 521";;
+    32) ARGS="--collect_world_list 50025631 --start_pose 527 830";;
+    33) ARGS="--collect_world_list 50036894 --start_pose 514 1596";;
+    34) ARGS="--collect_world_list 50036894 --start_pose 1149 1701";;
+    35) ARGS="--collect_world_list 50036894 --start_pose 1053 551";;
+    36) ARGS="--collect_world_list 50036894 --start_pose 1073 1536";;
+    37) ARGS="--collect_world_list 50041184 --start_pose 519 607";;
+    38) ARGS="--collect_world_list 50041184 --start_pose 650 517";;
+    39) ARGS="--collect_world_list 50041184 --start_pose 516 1205";;
+    40) ARGS="--collect_world_list 50041184 --start_pose 651 1105";;
+    41) ARGS="--collect_world_list 50045230 --start_pose 515 541";;
+    42) ARGS="--collect_world_list 50045230 --start_pose 538 956";;
+    43) ARGS="--collect_world_list 50045230 --start_pose 684 524";;
+    44) ARGS="--collect_world_list 50045230 --start_pose 694 965";;
+    45) ARGS="--collect_world_list 50045233 --start_pose 518 541";;
+    46) ARGS="--collect_world_list 50045233 --start_pose 657 518";;
+    47) ARGS="--collect_world_list 50045233 --start_pose 570 952";;
+    48) ARGS="--collect_world_list 50045233 --start_pose 715 961";;
+    49) ARGS="--collect_world_list 50052749 --start_pose 515 515";;
+    50) ARGS="--collect_world_list 50052749 --start_pose 513 870";;
+    51) ARGS="--collect_world_list 50052749 --start_pose 800 583";;
+    52) ARGS="--collect_world_list 50052749 --start_pose 802 913";;
+    53) ARGS="--collect_world_list 50055638 --start_pose 648 518";;
+    54) ARGS="--collect_world_list 50055638 --start_pose 697 618";;
+    55) ARGS="--collect_world_list 50055638 --start_pose 513 1195";;
+    56) ARGS="--collect_world_list 50055638 --start_pose 689 1059";;
+    57) ARGS="--collect_world_list 50057022 --start_pose 529 529";;
+    58) ARGS="--collect_world_list 50057022 --start_pose 718 508";;
+    59) ARGS="--collect_world_list 50057022 --start_pose 512 1003";;
+    60) ARGS="--collect_world_list 50057022 --start_pose 690 1049";;
+    *) echo "Invalid SLURM_ARRAY_TASK_ID"; exit 1;;
+esac
+
+# Navigate to your project directory (if not submitting the job from there)
+cd /data1/datasets/cherieh/map-explore/map_prediction_toolbox/data_factory
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+
+
+# Run the Python script with the selected arguments
+python3 -u kth_explore_sim.py $ARGS
+
+#END
