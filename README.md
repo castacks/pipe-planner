@@ -96,9 +96,11 @@ Run the 'explore.py' script as below:
 If you find our paper or code useful, please cite us:
 
 ```bib
-@article{baek2025pipe,
-  title={PIPE Planner: Pathwise Information Gain with Map Predictions for Indoor Robot Exploration},
-  author={Baek, Seungjae and Moon, Brady and Kim, Seungchan and Cao, Muqing and Ho, Cherie and Scherer, Sebastian and others},
-  journal={arXiv preprint arXiv:2503.07504},
-  year={2025}
-}
+@inproceedings{baek2025pipe,
+  author={Baek, Seungjae and Moon, Brady and Kim, Seungchan and Cao, Muqing and Ho, Cherie and Scherer, Sebastian and Jeon, Jeong Hwan},
+  booktitle={2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}, 
+  title={PIPE Planner: Pathwise Information Gain with Map Predictions for Indoor Robot Exploration}, 
+  year={2025},
+  pages={7684-7691},
+  doi={10.1109/IROS60139.2025.11246190}}
+
